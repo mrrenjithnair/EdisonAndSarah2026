@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Edison &amp; Sarah · Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue:       #aebfd6;   /* powder blue (envelope) */
+    --blue-deep:  #8ea3c2;
+    --blue-soft:  #c8d4e6;
+    --bg:         #eef1f7;    /* page bg, very light blue */
+    --card:       #ffffff;
+    --ink:        #3c4253;
+    --muted:      #8b93a7;
+    --gold:       #b08d52;    /* antique gold */
+    --gold-deep:  #8f6f3c;
+    --gold-light: #d8bd86;
+    --line:       #e2e6ef;
+    --shadow:     0 18px 50px rgba(80, 95, 130, 0.18);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --script: 'Great Vibes', cursive;
+    --sans: 'Montserrat', system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: #d4dbe8; color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+
+  .phone {
+    max-width: 430px; margin: 0 auto; background: var(--bg);
+    min-height: 100vh; position: relative; box-shadow: var(--shadow); overflow: hidden;
+  }
+  body.sealed .phone { height: 100vh; overflow: hidden; }
+
+  section { padding: 64px 28px; position: relative; }
+
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: .12s; } .reveal.d2 { transition-delay: .24s; } .reveal.d3 { transition-delay: .36s; }
+
+  .script { font-family: var(--script); color: var(--gold-deep); line-height: 1; }
+  .eyebrow { font-size: 11px; letter-spacing: .42em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
+  .divider { width: 56px; height: 1px; background: var(--gold); margin: 18px auto; position: relative; }
+  .divider::before { content: '❦'; position: absolute; top: -13px; left: 50%; transform: translateX(-50%); color: var(--gold); font-size: 16px; background: var(--bg); padding: 0 8px; }
+  .details .divider::before, .gallery .divider::before { background: var(--card); }
+
+  /* ============ ENVELOPE INTRO ============ */
+  .envelope-screen {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: radial-gradient(120% 90% at 50% 30%, #c4d1e6 0%, var(--blue) 55%, var(--blue-deep) 100%);
+    transition: opacity 1s ease, visibility 1s;
+    max-width: 430px; margin: 0 auto;
+  }
+  .envelope-screen.opened { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .intro-eyebrow { color: #fff; opacity: .85; margin-bottom: 30px; animation: fadeDown 1.4s ease both; }
+
+  .envelope { position: relative; width: 260px; height: 178px; cursor: pointer; perspective: 900px; animation: floaty 4.5s ease-in-out infinite; }
+  .env-body { position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(160deg, #bccbe0 0%, #a6b8d3 60%, #9aaccb 100%); box-shadow: 0 22px 45px rgba(70,90,130,.4), inset 0 0 40px rgba(255,255,255,.18); overflow: hidden; }
+  .env-body::before, .env-body::after { content: ''; position: absolute; bottom: 0; border-style: solid; border-color: transparent; }
+  .env-body::before { left: 0;  border-width: 89px 130px 89px 0; border-right-color: rgba(255,255,255,.10); }
+  .env-body::after  { right: 0; border-width: 89px 0 89px 130px; border-left-color: rgba(0,0,0,.06); }
+  .env-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 0; border-style: solid; border-width: 0 130px 100px 130px; border-color: transparent transparent #b0c0d8 transparent; z-index: 2; }
+  .env-flap { position: absolute; top: 0; left: 0; right: 0; height: 0; border-style: solid; border-width: 100px 130px 0 130px; border-color: #c2cfe3 transparent transparent transparent; transform-origin: top; transform: rotateX(0deg); z-index: 5; transition: transform .9s ease, z-index .1s .45s; }
+  .envelope.open .env-flap { transform: rotateX(180deg); z-index: 1; }
+  .env-letter { position: absolute; left: 14px; right: 14px; bottom: 10px; top: 26px; background: linear-gradient(180deg, #fff, #f4f1ea); border-radius: 6px; z-index: 3; box-shadow: 0 6px 18px rgba(0,0,0,.12); display: flex; align-items: center; justify-content: center; transform: translateY(0); transition: transform 1s ease .35s; font-family: var(--script); font-size: 30px; color: var(--gold-deep); }
+  .envelope.open .env-letter { transform: translateY(-46px); }
+  .seal { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 74px; height: 74px; border-radius: 50%; z-index: 6; background: radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 55%, var(--gold-deep) 100%); box-shadow: 0 6px 16px rgba(0,0,0,.3), inset 0 2px 6px rgba(255,255,255,.4); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 22px; color: rgba(255,255,255,.92); transition: opacity .5s ease, transform .5s ease; }
+  .seal::after { content:''; position:absolute; inset:7px; border:1px solid rgba(255,255,255,.45); border-radius:50%; }
+  .envelope.open .seal { opacity: 0; transform: translate(-50%,-50%) scale(.4); }
+  .intro-line { margin-top: 40px; text-align: center; color: #fff; font-family: var(--serif); font-style: italic; font-size: 22px; letter-spacing: .03em; text-shadow: 0 1px 10px rgba(60,75,110,.3); animation: fadeUp 1.6s ease .3s both; }
+  .tap-hint { margin-top: 22px; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #fff; opacity: .8; animation: pulse 2s ease-in-out infinite; }
+
+  /* ============ HERO ============ */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 28px; background: radial-gradient(120% 80% at 50% -10%, #fff 0%, rgba(255,255,255,0) 55%), linear-gradient(180deg, #e3e9f4 0%, var(--bg) 100%); overflow: hidden; }
+  .hero-names { font-family: var(--script); font-size: 70px; color: var(--gold-deep); margin: 6px 0 2px; line-height: .98; }
+  .hero-amp { display: block; font-size: 30px; color: var(--gold); margin: 4px 0; }
+  .hero-sub { font-family: var(--serif); font-style: italic; font-size: 19px; letter-spacing: .06em; color: var(--muted); margin-top: 14px; }
+  .hero-date { margin-top: 26px; font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: .14em; color: var(--ink); }
+  .scroll-cue { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); animation: bob 2s ease-in-out infinite; }
+  .scroll-cue span { display: block; font-size: 18px; margin-top: 4px; }
+  .petal { position: absolute; top: -20px; color: rgba(176,141,82,.55); animation: fall linear infinite; }
+
+  /* ============ COUNTDOWN ============ */
+  .countdown { text-align: center; background: var(--card); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .count-grid { display: flex; justify-content: center; gap: 14px; margin-top: 26px; }
+  .count-box { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 16px 0; width: 74px; }
+  .count-num { font-family: var(--serif); font-size: 34px; font-weight: 600; color: var(--gold-deep); }
+  .count-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  /* ============ BLESSING / STORY ============ */
+  .story { text-align: center; }
+  .story-title, .section-title { font-family: var(--serif); font-size: 30px; font-weight: 600; letter-spacing: .04em; margin-top: 6px; }
+  .story .verse { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--ink); margin-top: 14px; }
+  .story .verse-ref { font-family: var(--serif); font-size: 16px; color: var(--muted); margin-top: 4px; }
+  .story p.fam { font-family: var(--serif); font-size: 17px; color: var(--muted); margin-top: 18px; }
+  .story .hosts { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink); margin-top: 4px; }
+
+  /* ============ DETAILS ============ */
+  .details { background: var(--card); border-top: 1px solid var(--line); text-align: center; }
+  .event-card { background: var(--bg); border: 1px solid var(--line); border-radius: 18px; padding: 26px 22px; margin-top: 22px; }
+  .event-card .ico { font-size: 26px; }
+  .event-card h3 { font-family: var(--serif); font-size: 23px; font-weight: 600; margin: 8px 0 2px; }
+  .event-card .when { color: var(--gold-deep); font-weight: 500; letter-spacing: .05em; font-size: 14px; }
+  .event-card .where { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .event-card .by { color: var(--muted); font-style: italic; font-family: var(--serif); font-size: 15px; margin-top: 10px; }
+
+  /* ============ VENUE ============ */
+  .venue { text-align: center; }
+  .map-btn, .rsvp-btn { display: inline-block; margin-top: 14px; padding: 14px 30px; background: var(--gold-deep); color: #fff; text-decoration: none; border-radius: 40px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; border: none; cursor: pointer; transition: transform .2s ease; }
+  .map-btn:active, .rsvp-btn:active { transform: scale(.96); }
+  .map-frame { margin-top: 22px; height: 180px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: repeating-linear-gradient(45deg, #e2e8f2, #e2e8f2 14px, #d8e0ee 14px, #d8e0ee 28px); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; letter-spacing: .1em; }
+
+  /* ============ RSVP ============ */
+  .rsvp { text-align: center; }
+  .rsvp form { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .rsvp label { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .rsvp input, .rsvp select { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); font-family: var(--sans); font-size: 15px; color: var(--ink); margin-top: 4px; }
+  .rsvp input:focus, .rsvp select:focus { outline: none; border-color: var(--gold); }
+  .thanks { display: none; margin-top: 18px; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--gold-deep); }
+
+  /* ============ FOOTER ============ */
+  .footer { text-align: center; padding: 54px 28px 70px; background: var(--bg); }
+  .footer .script { font-size: 50px; }
+  .footer p { color: var(--muted); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; margin-top: 10px; }
+  .footer .compliments { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); margin-top: 20px; text-transform: none; letter-spacing: normal; }
+  .footer .compliments b { color: var(--ink); font-style: normal; }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(30px);} to {opacity:1; transform:none;} }
+  @keyframes fadeDown { from { opacity:0; transform: translateY(-20px);} to {opacity:1; transform:none;} }
+  @keyframes bob { 0%,100%{ transform: translate(-50%,0);} 50%{ transform: translate(-50%,8px);} }
+  @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+  @keyframes floaty { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-10px);} }
+  @keyframes pulse { 0%,100%{ opacity:.4;} 50%{ opacity:.9;} }
+</style>
+</head>
+<body class="sealed">
+
+  <!-- ============ ENVELOPE INTRO ============ -->
+  <div class="envelope-screen" id="introScreen">
+    <p class="eyebrow intro-eyebrow">You're invited</p>
+    <div class="envelope" id="envelope" role="button" aria-label="Open invitation">
+      <div class="env-body"><div class="env-letter">E &amp; S</div></div>
+      <div class="env-bottom"></div>
+      <div class="env-flap"></div>
+      <div class="seal">E&amp;S</div>
+    </div>
+    <p class="intro-line">Together with our families,<br/>we joyfully invite you</p>
+    <p class="tap-hint">Tap to open</p>
+  </div>
+
+  <div class="phone">
+
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="petals"></div>
+      <p class="eyebrow">Together with their families</p>
+      <h1 class="hero-names">Edison<span class="hero-amp">&amp;</span>Sarah</h1>
+      <p class="hero-sub">request the pleasure of your company<br/>at the celebration of their marriage</p>
+      <p class="hero-date">12 · 09 · 2026</p>
+      <div class="scroll-cue">Scroll<span>⌄</span></div>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section class="countdown reveal">
+      <p class="eyebrow">Counting down to forever</p>
+      <div class="divider"></div>
+      <div class="count-grid">
+        <div class="count-box"><div class="count-num" id="dd">00</div><div class="count-label">Days</div></div>
+        <div class="count-box"><div class="count-num" id="hh">00</div><div class="count-label">Hrs</div></div>
+        <div class="count-box"><div class="count-num" id="mm">00</div><div class="count-label">Min</div></div>
+        <div class="count-box"><div class="count-num" id="ss">00</div><div class="count-label">Sec</div></div>
+      </div>
+    </section>
+
+    <!-- BLESSING / FAMILIES -->
+    <section class="story">
+      <p class="eyebrow reveal">With God's blessing</p>
+      <div class="divider reveal d1"></div>
+      <p class="verse reveal d1">"Therefore what God has joined together,<br/>let no one separate"</p>
+      <p class="verse-ref reveal d1">Mark 10:9</p>
+
+      <p class="fam reveal d2">Son of</p>
+      <p class="hosts reveal d2">Mrs. Jessy Sam &amp; Mr. Sam P. George</p>
+      <p class="fam reveal d3">Daughter of</p>
+      <p class="hosts reveal d3">Mrs. Sheeja Philip &amp; Mr. Philip C. Panicker</p>
+    </section>
+
+    <!-- DETAILS -->
+    <section class="details">
+      <p class="eyebrow reveal">The celebration</p>
+      <h2 class="section-title reveal d1">When &amp; Where</h2>
+      <div class="divider reveal d1"></div>
+
+      <div class="event-card reveal d2">
+        <div class="ico">⛪</div>
+        <h3>The Wedding</h3>
+        <p class="when">Saturday, 12 September 2026 · 4:00 PM</p>
+        <p class="where">St. James Mar Thoma Church<br/>Vadolgaon, O.T. Section<br/>Ulhasnagar – 3, Thane, Maharashtra</p>
+        <p class="by">Solemnized by His Grace the Most Rev.<br/>Dr. Theodosius Mar Thoma Metropolitan</p>
+      </div>
+
+      <div class="event-card reveal d3">
+        <div class="ico">🥂</div>
+        <h3>The Reception</h3>
+        <p class="when">Saturday, 12 September 2026 · 7:30 PM onwards</p>
+        <p class="where">Sky Garden Banquet Hall<br/>C-212, Regency Plaza, Shantinagar<br/>Near Ulhasnagar Welcome Gate, Kalyan (W)</p>
+      </div>
+    </section>
+
+    <!-- VENUE -->
+    <section class="venue">
+      <p class="eyebrow reveal">Find your way</p>
+      <h2 class="section-title reveal d1">Getting there</h2>
+      <div class="divider reveal d1"></div>
+      <div class="map-frame reveal d2">📍 Map preview</div>
+      <a class="map-btn reveal d2" href="https://maps.google.com/?q=St.+James+Mar+Thoma+Church+Ulhasnagar" target="_blank" rel="noopener">Church Location</a>
+      <a class="map-btn reveal d2" href="https://maps.google.com/?q=Sky+Garden+Banquet+Hall+Kalyan+West" target="_blank" rel="noopener">Reception Venue</a>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="rsvp">
+      <p class="eyebrow reveal">With love</p>
+      <h2 class="section-title reveal d1">We look forward<br/>to celebrating with you</h2>
+      <div class="divider reveal d1"></div>
+      <p class="rsvp-contact reveal d2" style="font-family:var(--serif);font-style:italic;color:var(--muted);margin-top:8px;font-size:16px;">Contact: 9860187978 &amp; 9860187499</p>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="footer reveal">
+      <div class="script">Edison &amp; Sarah</div>
+      <p>#EdisonAndSarah2026</p>
+      <p class="compliments">With best compliments from<br/><b>Alwin, Subi &amp; Abriel</b></p>
+    </section>
+
+  </div>
+
+<script>
+  // ---- envelope open ----
+  const envelope = document.getElementById('envelope');
+  const introScreen = document.getElementById('introScreen');
+  function openInvite() {
+    if (envelope.classList.contains('open')) return;
+    envelope.classList.add('open');
+    setTimeout(() => { introScreen.classList.add('opened'); document.body.classList.remove('sealed'); }, 1300);
+  }
+  envelope.addEventListener('click', openInvite);
+  introScreen.addEventListener('click', (e) => { if (e.target === introScreen) openInvite(); });
+
+  // ---- scroll reveal ----
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---- countdown to 12 Sep 2026, 4:00 PM ----
+  const target = new Date('2026-09-12T16:00:00').getTime();
+  const pad = n => String(n).padStart(2, '0');
+  function tick() {
+    const diff = target - Date.now();
+    if (diff <= 0) { ['dd','hh','mm','ss'].forEach(id => document.getElementById(id).textContent = '00'); return; }
+    document.getElementById('dd').textContent = pad(Math.floor(diff / 86400000));
+    document.getElementById('hh').textContent = pad(Math.floor(diff % 86400000 / 3600000));
+    document.getElementById('mm').textContent = pad(Math.floor(diff % 3600000 / 60000));
+    document.getElementById('ss').textContent = pad(Math.floor(diff % 60000 / 1000));
+  }
+  tick(); setInterval(tick, 1000);
+
+  // ---- floating petals ----
+  const petalLayer = document.querySelector('.petals');
+  const glyphs = ['❀','✿','❁','♥','✦'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('span');
+    p.className = 'petal'; p.textContent = glyphs[i % glyphs.length];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.fontSize = (12 + Math.random() * 14) + 'px';
+    p.style.animationDuration = (7 + Math.random() * 7) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    petalLayer.appendChild(p);
+  }
+
+</script>
+</body>
+</html>
